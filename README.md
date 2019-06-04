@@ -1,34 +1,48 @@
 # azure_get_cost
 
-AzureのREST APIで、
-Azureの使用料金(税抜)を取得する例。
+- [azure_get_cost](#azure_get_cost)
+- [準備](#準備)
+  - [備考](#備考)
+- [実行](#実行)
+- [出力例](#出力例)
+- [TODO](#todo)
+- [その他](#その他)
 
-Azureポータルの、
-[サブスクリプション]-[(サブスクリプション選択)]-[コスト分析]
+AzureのREST APIで、
+Azureの使用料金(税抜)を取得するサンプルコード。
+
+[Azureポータル](https://portal.azure.com/)の、
+[サブスクリプション] - [(サブスクリプション選択)] - [コスト分析]
 で表示されるコストを取得する。
 
-# 備考
+検索したら
+[Azureでコマンドラインから利用料金を取得する | Ryuzee.com](https://www.ryuzee.com/contents/blog/7098)
+のような
+古めのAPIを使い、CSPでは動かない
+例しか見つからなかったので
+作ってみた。
 
-一応Python2でも3でも動く(JSONに漢字がないから)。
+Python2でも3でも動く(このJSONに漢字がないから)。
 
 
 # 準備
 
-```
+azure-cliで
+``` bash
 az ad sp create-for-rbac --role Reader -n http://test6 > test6.json
 ```
-(`test6`は例)
+(`test6`は例。ログインやアカウント選択手順は省いた)
 
 
-今回は読み取りだけなので、組み込みロールのReaderを使った。
+今回は読取だけなので、組込ロールのReaderを使った(それでも範囲広すぎ)。
 
-詳しくは以下参照:
+ロールについて詳しくは以下参照:
 - [Azure リソースの組み込みロール | Microsoft Docs](https://docs.microsoft.com/ja-jp/azure/role-based-access-control/built-in-roles)
 - [Azure リソースのカスタム ロール | Microsoft Docs](https://docs.microsoft.com/ja-jp/azure/role-based-access-control/custom-roles)
 
 ## 備考
 
-Azureポータルで
+[Azureポータル](https://portal.azure.com/)の
 [Azure Active Directorty] - [App registrations] - [すべてのアプリケーション]
 で、いま登録したアプリケーションが編集できる。
 
@@ -38,12 +52,12 @@ Azureポータルで
 
 # 実行
 
-```
+``` bash
 ./get_token.py test6.json > b1.json
 ```
 で1時間使えるtokenを得る。(`b1`は例)
 
-```
+``` bash
 ./get_cost.py b1.json
 ```
 でcostを得る
@@ -51,7 +65,7 @@ Azureポータルで
 
 # 出力例
 
-```
+``` json
 (略)
     "rows": [
       [
@@ -82,5 +96,17 @@ rowsの上から
 
 # TODO
 
-- tokenをmemcacheに入れるとか工夫すること。
+- tokenをmemcacheに入れるなど、かっこよく工夫すること。
 - RESTの呼び出してtimeoutが入ってないので、なんとかすること。
+- subscription毎にRBACが要るのが面倒なので、なんとかすること。
+
+
+# その他
+
+使用しているAzureのAPIは
+- [Subscriptions - List (Azure Resource Management) | Microsoft Docs](https://docs.microsoft.com/en-us/rest/api/resources/subscriptions/list)
+- [Query - Usage By Scope (Azure Cost Management) | Microsoft Docs](https://docs.microsoft.com/en-us/rest/api/cost-management/query/usagebyscope)
+
+Query の Request Body がちょっと面白い。
+[上記ページ](https://docs.microsoft.com/en-us/rest/api/cost-management/query/usagebyscope)
+にある例が参考になる。
