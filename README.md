@@ -110,3 +110,11 @@ rowsの上から
 Query の Request Body がちょっと面白い。
 [上記ページ](https://docs.microsoft.com/en-us/rest/api/cost-management/query/usagebyscope)
 にある例が参考になる。
+
+CSPでは動きません。
+
+> Subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx offer MS-AZR-0146P is not associated with a supported EA, WebDirect or GTM offer type (Request ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+
+おそらく対応しないサブスクリプションのオファーは
+[Azure Consumption | Microsoft Docs](https://docs.microsoft.com/en-us/rest/api/consumption/#list-of-unsupported-subscription-types)
+にあるリストと同じものではないかと。

@@ -7,8 +7,6 @@ import requests
 import codecs
 import json
 
-BASE_URL = "https://api.partnercenter.microsoft.com"
-
 
 def beautify_json(obj):
     return json.dumps(
