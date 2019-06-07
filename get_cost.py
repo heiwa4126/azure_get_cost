@@ -36,7 +36,7 @@ def get_subscriptions_list(cred):
     )
 
 
-def query_cost1(cred, subId):
+def query_cost1(token, subId):
     """
     https://docs.microsoft.com/en-us/rest/api/cost-management/query/usagebyscope
     を使って
@@ -50,7 +50,7 @@ def query_cost1(cred, subId):
         subId
     )
     headers = {
-        "Authorization": "Bearer {}".format(cred["access_token"]),
+        "Authorization": "Bearer {}".format(token["access_token"]),
         "Content-type": "application/json",
     }
     params = {"api-version": "2019-01-01"}
@@ -83,15 +83,15 @@ def main():
     """main"""
 
     with open(sys.argv[1], "r") as f:
-        cred = json.load(f)
+        token = json.load(f)
 
-    r = get_subscriptions_list(cred)
+    r = get_subscriptions_list(token)
     q = display_result(r)
     if q is None:
         sys.exit(1)
 
     for i in q["value"]:
-        r = query_cost1(cred, i["subscriptionId"])
+        r = query_cost1(token, i["subscriptionId"])
         q2 = display_result(r)
         if q2 is None:
             sys.exit(1)
